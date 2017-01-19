@@ -124,14 +124,15 @@ class Fraction:
 
     @staticmethod
     def __converter(decimal):
-        repeat = repeat_pattern(decimal)
-        if repeat:
-            return repeat_ratios(decimal, repeat)
-        else:
-            return convert_any_decimal(decimal)
+        return decimal_ratios(decimal)
 
 
-def repeat_ratios(x, repeat=1):
+def decimal_ratios(x, repeat=1):
+    from zmath.core import floatint
+    for n in range(1, 1000):
+        numer = floatint(x * n)
+        if isinstance(numer, int):
+            return numer, n
     mult = 10 ** repeat
     numer = round(mult * x - x)
     return numer, mult - 1
@@ -160,14 +161,6 @@ def convert_any_decimal(decimal):
     return numer, denom
 
 
-def convert_to_frac(x):
-    repeat = repeat_pattern(x)
-    if repeat:
-        return repeat_ratios(x, repeat)
-    else:
-        return convert_any_decimal(x)
-
-
 def main():
     f1 = Fraction(0.5)
     f2 = Fraction(9/2)
@@ -176,9 +169,6 @@ def main():
     f3_sqrt = f3.sqrt()
     f4_sqrt = f4.sqrt()
     print(f1, f2, f3, f4, f3_sqrt, f4_sqrt)
-    print(f1, int(f1), float(f1))
-    print(f2, int(f2), float(f2))
-    print(round(f2))
 
 
 if __name__ == "__main__":
