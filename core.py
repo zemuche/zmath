@@ -149,7 +149,7 @@ def eachtofrac(collection):
     """Takes an iterable as an argument and returns a
     list of each item converted to a fraction"""
     return [Fraction(c) for c in collection]
-#
+
 
 def floatfrac(num):
     """Return the fraction of a floating point number."""
@@ -157,7 +157,6 @@ def floatfrac(num):
         return Fraction(num)
     else:
         return num
-#
 
 
 def primes(limit):
