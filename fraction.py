@@ -106,13 +106,6 @@ class Fraction:
             return str(self) + " > " + str(other)
         return str(self) + " = " + str(other)
 
-    def sqrt(self):
-        numer_new = (self.numer ** 0.5) * (self.denom ** 0.5)
-        if numer_new.is_integer():
-            return Fraction(int(numer_new), self.denom)
-        else:
-            return round(numer_new / self.denom, 3)
-
     def convert_to_fraction(self, other):
         if isinstance(other, int):
             return Fraction(other)
@@ -173,8 +166,8 @@ def main():
     f4 = Fraction(1/9)
     f1_sqrd = f1 ** 2
     f2_sqrd = f2 ** 2
-    f3_sqrt = f3 ** 0.5
-    f4_sqrt = f4 ** 0.5
+    f3_sqrt = f3 ** (1/2)
+    f4_sqrt = f4 ** (1/2)
     print(f1, f2, f3, f4)
     print(f1_sqrd, f2_sqrd, f3_sqrt, f4_sqrt)
 

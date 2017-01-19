@@ -48,8 +48,7 @@ class Arithmetic(Sequence):
     """
 
     def __init__(self, a1, d, n):
-        super().__init__(a1, n)
-        self.d = d
+        super().__init__(a1, d, n)
         self.seq = self._sequence()
 
     def _sequence(self):
@@ -98,7 +97,7 @@ class Harmonic(Sequence):
 
     def _sequence(self):
         seq = []
-        for n in range(1, self.n + 1):
+        for n in range(self.a, self. a + self.n):
             seq.append(Fraction(1 / (self.d * n)))
         return seq
 
@@ -306,7 +305,7 @@ def hdiff(seq):
     """Return the common difference of a harmonic sequence, or False if not."""
     seq = eachtofloat(seq)
     d = 1 / seq[1] - 1 / seq[0]
-    for i in range(1, len(seq)):
+    for i in range(2, len(seq)):
         cur = 1 / seq[i] - 1 / seq[i - 1]
         if cur != d:
             return False
@@ -329,6 +328,14 @@ def ratio(seq):
     return floatfrac(r)
 
 
+def pratio(seq):
+    roots = [None] * len(seq)
+    for j, n in enumerate(seq):
+        for i in range(10):
+            if isinstance(floatint(n ** i), int):
+                roots[j] = i
+
+
 def nth_triangular(n):
     return sigma(n)
 
@@ -342,14 +349,23 @@ def sequence(seq):
             print(k + ': ' + str(v))
 
 
+def allsame(iterable):
+    for i in range(len(iterable) - 1):
+        if iterable[i] != iterable[i+1]:
+            return False
+    return True
+
+
 def main():
-    sequence(list(Harmonic(1, 3, 7)))
+    alist = [9, 9, 9, 9, 8]
+    print(allsame(alist))
+    # sequence(alist)
+    #
+    # h1 = Harmonic(2, 5, 7)
+    # print(h1)
+    # print(h1.series())
 
-    h1 = Harmonic(1, 3, 7)
-    print(h1)
-    print(h1.series())
-
-    # g1 = Geometric(1, 2, 64//2)
+    # g1 = Geometric(2, 2, 10)
     # print(g1)
     # print(g1.find(64), g1.series())
 
@@ -359,7 +375,6 @@ def main():
     # t1 = Triangular(1, 10)
     # s1 = Power(3, 10)
     # f1 = Fibonacci(15)
-    # print(t1, t1.series())
     # print(s1)
     # print(f1.series())
 

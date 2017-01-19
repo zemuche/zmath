@@ -489,8 +489,9 @@ def combinations(iterable, r=None):
 
 
 def main():
-    from time import time
-    import os
+    from miscellaneous import measure
+    import sys
+    sys.setrecursionlimit(10000)
     # rad1 = radian(225)
     # print(rad1, end=' ')
     # deg1 = degree(1 / 4)
@@ -500,19 +501,18 @@ def main():
     # deg2 = degree(rad1)
     # print(deg2, end=' ')
 
-    a = list(range(3, 22, 3))
-    agcd = gcd(*a)
-    print(agcd)
-    print(a, list(map(lambda x: x // agcd, a)))
-    alcm = lcm(*a)
-    print(alcm)
-    print(a, list(map(lambda x: alcm // x, a)))
-    # print(sigma(20))
-    # print(pow(4, 0.5))
-    #
-    start = time()
+    # a = list(range(3, 22, 3))
+    # agcd = gcd(*a)
+    # print(agcd)
+    # print(a, list(map(lambda x: x // agcd, a)))
+    # alcm = lcm(*a)
+    # print(alcm)
+    # print(a, list(map(lambda x: alcm // x, a)))
 
-    print(time() - start)
+    x = 1000
+    f = measure(fib)
+    f(x)
+
     # mytriples = sorted(triples(50), key=lambda *triple: sum(*triple))
     # for t in mytriples:
     #     print(t)
