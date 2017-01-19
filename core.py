@@ -500,16 +500,16 @@ def main():
     # deg2 = degree(rad1)
     # print(deg2, end=' ')
 
-    # a = [9, -8, -7]
-    # agcd = gcd(*a)
-    # print(agcd)
-    # print(a, list(map(lambda x: x // agcd, a)))
-    # alcm = lcm(*a)
-    # print(alcm)
-    # print(a, list(map(lambda x: alcm // x, a)))
+    a = list(range(3, 22, 3))
+    agcd = gcd(*a)
+    print(agcd)
+    print(a, list(map(lambda x: x // agcd, a)))
+    alcm = lcm(*a)
+    print(alcm)
+    print(a, list(map(lambda x: alcm // x, a)))
     # print(sigma(20))
     # print(pow(4, 0.5))
-
+    #
     start = time()
 
     print(time() - start)

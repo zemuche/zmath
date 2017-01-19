@@ -1,4 +1,6 @@
-from zmath.core import floatint, floatfrac, sigma, zsum, fibonacci, fib
+from zmath.core import floatint, floatfrac, eachtofloat,\
+    sigma, zsum, fibonacci, fib
+from zmath.fraction import Fraction
 
 
 class Sequence:
@@ -6,20 +8,26 @@ class Sequence:
     A template for other sequences
     """
 
-    def __init__(self, a1, n):
+    def __init__(self, a1, d, n):
         self.a = a1
+        self.d = d
         self.n = n
         self.seq = [None]
         self.an = self.seq[-1]
 
     def __repr__(self):
-        return str(self.seq)
+        return self.wrap(self.seq)
 
     def __len__(self):
         return len(self.seq)
 
     def __iter__(self):
-        return self.seq
+        return iter(self.seq)
+
+    @staticmethod
+    def wrap(seqlist, wraptype=str):
+        wrap_at = 4 if len(seqlist) > 4 else len(seqlist) + 1
+        return ', '.join(wraptype(s) for s in seqlist)
 
 
 class Arithmetic(Sequence):
@@ -84,22 +92,14 @@ class Harmonic(Sequence):
         diff - returns the difference of the sequence
     """
 
-    def __init__(self, a1, n):
-        super().__init__(a1, n)
+    def __init__(self, a1, d, n):
+        super().__init__(a1, d, n)
         self.seq = self._sequence()
-
-    def __repr__(self):
-        return str(self.seq)
-
-    def __iter__(self):
-        return iter(self.seq)
 
     def _sequence(self):
         seq = []
-        a = self.a - (1 / 1)
-        for i in range(1, self.n + 1):
-            a += 1 / i
-            seq.append(floatint(a, 3))
+        for n in range(1, self.n + 1):
+            seq.append(Fraction(1 / (self.d * n)))
         return seq
 
     def nthterm(self, n):
@@ -108,7 +108,7 @@ class Harmonic(Sequence):
         return self.seq[n - 1]
 
     def series(self):
-        return zsum(self.seq)
+        return Fraction(zsum(eachtofloat(self.seq)))
 
 
 class Geometric:
@@ -304,12 +304,13 @@ def diff(seq):
 
 def hdiff(seq):
     """Return the common difference of a harmonic sequence, or False if not."""
-    d = 1 / (seq[1] - seq[0])
+    seq = eachtofloat(seq)
+    d = 1 / seq[1] - 1 / seq[0]
     for i in range(1, len(seq)):
-        cur = seq[i - 1] + floatint(1 / d, 5)
-        if not (seq[i] - 0.11111 <= cur <= seq[i] + 0.11111):
+        cur = 1 / seq[i] - 1 / seq[i - 1]
+        if cur != d:
             return False
-    return floatint(d)
+    return floatfrac(d)
 
 
 def nth_geometric(a, r, n):
@@ -325,7 +326,7 @@ def ratio(seq):
     for i in range(1, len(seq)):
         if not seq[i] / r == seq[i - 1]:
             return False
-    return floatint(r)
+    return floatfrac(r)
 
 
 def nth_triangular(n):
@@ -336,22 +337,17 @@ def sequence(seq):
     results = {"Arithmetic": diff(seq),
                "Harmonic": hdiff(seq),
                "Geometric": ratio(seq)}
-    res = ''
     for k, v in results.items():
         if v:
-            res += k + ': ' + str(v) + '\n'
-    if len(res) == 0:
-        return "None"
-    return res
+            print(k + ': ' + str(v))
 
 
 def main():
-    aset = [2, 4, 8, 16, 32, 64, 128, 256]
-    print(sequence(aset))
-    print(sequence([2, 2.5, 3, 3.5, 4]))
+    sequence(list(Harmonic(1, 3, 7)))
 
-    h1 = Harmonic(2, 5)
-    print(sequence(list(h1)))
+    h1 = Harmonic(1, 3, 7)
+    print(h1)
+    print(h1.series())
 
     # g1 = Geometric(1, 2, 64//2)
     # print(g1)

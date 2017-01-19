@@ -94,6 +94,9 @@ class Fraction:
         return Fraction(numer_new, denom_new)
     __rfloordiv__ = __rtruediv__
 
+    def __pow__(self, power, modulo=None):
+        return Fraction(self.numer ** power / self.denom ** power)
+
     def __gt__(self, other):
         other = self.convert_to_fraction(other)
         diff = self.numer * other.denom - self.denom * other.numer
@@ -127,12 +130,14 @@ class Fraction:
         return decimal_ratios(decimal)
 
 
-def decimal_ratios(x, repeat=1):
+def decimal_ratios(x, repeat=None):
     from zmath.core import floatint
-    for n in range(1, 1000):
+    for n in range(1, 10000):
         numer = floatint(x * n)
         if isinstance(numer, int):
             return numer, n
+    if repeat is None:
+        repeat = 5
     mult = 10 ** repeat
     numer = round(mult * x - x)
     return numer, mult - 1
@@ -163,12 +168,15 @@ def convert_any_decimal(decimal):
 
 def main():
     f1 = Fraction(0.5)
-    f2 = Fraction(9/2)
+    f2 = Fraction(9/4)
     f3 = Fraction(4, 9)
     f4 = Fraction(1/9)
-    f3_sqrt = f3.sqrt()
-    f4_sqrt = f4.sqrt()
-    print(f1, f2, f3, f4, f3_sqrt, f4_sqrt)
+    f1_sqrd = f1 ** 2
+    f2_sqrd = f2 ** 2
+    f3_sqrt = f3 ** 0.5
+    f4_sqrt = f4 ** 0.5
+    print(f1, f2, f3, f4)
+    print(f1_sqrd, f2_sqrd, f3_sqrt, f4_sqrt)
 
 
 if __name__ == "__main__":
