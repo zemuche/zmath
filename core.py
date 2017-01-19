@@ -1,5 +1,6 @@
 import math
 from functools import reduce
+from zmath.fraction import Fraction
 
 pi = 3.141592653589793
 e = 2.718281828
@@ -144,18 +145,18 @@ def floatint(num, rnd=None):
         return round(num, ndigits=rnd)
 
 
-# def eachtofrac(collection):
-#     """Takes an iterable as an argument and returns a
-#     list of each item converted to a fraction"""
-#     return [Fraction(c) for c in collection]
+def eachtofrac(collection):
+    """Takes an iterable as an argument and returns a
+    list of each item converted to a fraction"""
+    return [Fraction(c) for c in collection]
 #
 
-# def floatfrac(num):
-#     """Return the fraction of a floating point number."""
-#     if isinstance(num, float) or isinstance(num, int):
-#         return Fraction(num)
-#     else:
-#         return num
+def floatfrac(num):
+    """Return the fraction of a floating point number."""
+    if isinstance(num, float) or isinstance(num, int):
+        return Fraction(num)
+    else:
+        return num
 #
 
 
@@ -458,43 +459,6 @@ def wrap(x, n=5, length=10):
             x = ' '.join(str(a) for a in x)
         return str(x)[:n] + '..'
     return str(x)
-
-
-def repeat_ratios(x, repeat=1):
-    mult = 10 ** repeat
-    numer = round(mult * x - x)
-    return numer, mult - 1
-
-
-def repeat_pattern(x):
-    if len(str(x)) > 10:
-        dec = str(x - int(x))
-        dec = dec[3:14]
-        for i in range(1, 4):
-            pattern = True
-            for j in range(i, len(dec), i):
-                if dec[j - i] != dec[j]:
-                    pattern = False
-                    break
-            if pattern:
-                return i
-    return False
-
-
-def convert_any_decimal(decimal):
-    length = len(str(decimal)) - 1
-    multiplier = pow(10, length - 1)
-    numer = int(decimal * multiplier)
-    denom = multiplier
-    return numer, denom
-
-
-def convert_to_frac(x):
-    repeat = repeat_pattern(x)
-    if repeat:
-        return repeat_ratios(x, repeat)
-    else:
-        return convert_any_decimal(x)
 
 
 def wrapper(func, *args, **kwargs):

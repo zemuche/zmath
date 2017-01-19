@@ -1,9 +1,9 @@
 import math
-from zmath.core import repeat_ratios, repeat_pattern, convert_any_decimal
 
 
 class Fraction:
-    def __init__(self, numer, denom=1):
+    def __init__(self, numer, denom=1, mixed=False):
+        self.mixed = mixed
         if isinstance(numer, float):
             numer, denom = self.__converter(numer)
         g = math.gcd(numer, denom)
@@ -28,11 +28,11 @@ class Fraction:
     def denom(self, new_denom):
         self._denom = new_denom
 
-    def __str__(self, mixed=False):
+    def __str__(self):
         regular = str(self.numer) + '/' + str(self.denom)
         if self.numer == self.denom or self.denom == 1:
             return str(self.numer)
-        if mixed:
+        if self.mixed:
             if abs(self.numer) > abs(self.denom):
                 whole = self.numer // self.denom
                 self.numer %= self.denom
@@ -129,6 +129,43 @@ class Fraction:
             return repeat_ratios(decimal, repeat)
         else:
             return convert_any_decimal(decimal)
+
+
+def repeat_ratios(x, repeat=1):
+    mult = 10 ** repeat
+    numer = round(mult * x - x)
+    return numer, mult - 1
+
+
+def repeat_pattern(x):
+    if len(str(x)) > 10:
+        dec = str(x - int(x))
+        dec = dec[3:14]
+        for i in range(1, 4):
+            pattern = True
+            for j in range(i, len(dec), i):
+                if dec[j - i] != dec[j]:
+                    pattern = False
+                    break
+            if pattern:
+                return i
+    return False
+
+
+def convert_any_decimal(decimal):
+    length = len(str(decimal)) - 1
+    multiplier = pow(10, length - 1)
+    numer = int(decimal * multiplier)
+    denom = multiplier
+    return numer, denom
+
+
+def convert_to_frac(x):
+    repeat = repeat_pattern(x)
+    if repeat:
+        return repeat_ratios(x, repeat)
+    else:
+        return convert_any_decimal(x)
 
 
 def main():

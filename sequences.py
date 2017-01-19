@@ -6,11 +6,10 @@ class Sequence:
     A template for other sequences
     """
 
-    def __init__(self, a1, r, n):
+    def __init__(self, a1, n):
         self.a = a1
-        self.r = r
         self.n = n
-        self.seq = []
+        self.seq = [None]
         self.an = self.seq[-1]
 
     def __repr__(self):
@@ -18,6 +17,9 @@ class Sequence:
 
     def __len__(self):
         return len(self.seq)
+
+    def __iter__(self):
+        return self.seq
 
 
 class Arithmetic(Sequence):
@@ -38,7 +40,7 @@ class Arithmetic(Sequence):
     """
 
     def __init__(self, a1, d, n):
-        super().__init__(a1, d, n)
+        super().__init__(a1, n)
         self.d = d
         self.seq = self._sequence()
 
@@ -65,7 +67,7 @@ class Arithmetic(Sequence):
         return self.d
 
 
-class Harmonic:
+class Harmonic(Sequence):
     """
     Description:
         An advanced harmonic sequence toolkit.
@@ -83,10 +85,8 @@ class Harmonic:
     """
 
     def __init__(self, a1, n):
-        self.a = a1
-        self.n = n
-        self.seq = list(self._sequence())
-        self.an = self.seq[-1]
+        super().__init__(a1, n)
+        self.seq = self._sequence()
 
     def __repr__(self):
         return str(self.seq)
@@ -95,10 +95,12 @@ class Harmonic:
         return iter(self.seq)
 
     def _sequence(self):
+        seq = []
         a = self.a - (1 / 1)
         for i in range(1, self.n + 1):
             a += 1 / i
-            yield floatint(a, 3)
+            seq.append(floatint(a, 3))
+        return seq
 
     def nthterm(self, n):
         if n > self.n:
@@ -107,9 +109,6 @@ class Harmonic:
 
     def series(self):
         return zsum(self.seq)
-
-    def diff(self):
-        return self.d
 
 
 class Geometric:
@@ -347,13 +346,16 @@ def sequence(seq):
 
 
 def main():
-    # aset = [2, 4, 8, 16, 32, 64, 128, 256]
-    # print(sequence(aset))
-    # print(sequence([2, 2.5, 3, 3.5, 4]))
+    aset = [2, 4, 8, 16, 32, 64, 128, 256]
+    print(sequence(aset))
+    print(sequence([2, 2.5, 3, 3.5, 4]))
 
-    g1 = Geometric(1, 2, 64//2)
-    print(g1)
-    print(g1.find(64), g1.series())
+    h1 = Harmonic(2, 5)
+    print(sequence(list(h1)))
+
+    # g1 = Geometric(1, 2, 64//2)
+    # print(g1)
+    # print(g1.find(64), g1.series())
 
     # print(diff(list(a1)), diff(list(a2)))
     # print(ratio(list(g1)), ratio(list(g2)))
