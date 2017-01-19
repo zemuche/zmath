@@ -1,7 +1,26 @@
 from zmath.core import floatint, floatfrac, sigma, zsum, fibonacci, fib
 
 
-class Arithmetic:
+class Sequence:
+    """
+    A template for other sequences
+    """
+
+    def __init__(self, a1, r, n):
+        self.a = a1
+        self.r = r
+        self.n = n
+        self.seq = []
+        self.an = self.seq[-1]
+
+    def __repr__(self):
+        return str(self.seq)
+
+    def __len__(self):
+        return len(self.seq)
+
+
+class Arithmetic(Sequence):
     """
     Description:
         An advanced arithmetic sequence toolkit.
@@ -19,26 +38,17 @@ class Arithmetic:
     """
 
     def __init__(self, a1, d, n):
-        self.a = a1
+        super().__init__(a1, d, n)
         self.d = d
-        self.n = n
-        self.seq = list(self._sequence())
-        self.an = self.seq[-1]
-
-    def __repr__(self):
-        return str(self.seq)
-
-    def __len__(self):
-        return self.n
-
-    def __iter__(self):
-        return iter(self.seq)
+        self.seq = self._sequence()
 
     def _sequence(self):
+        seq = []
         a = self.a - self.d
         for _ in range(self.n):
             a += self.d
-            yield a
+            seq.append(a)
+        return seq
 
     def find(self, num):
         return self.seq.index(num)
@@ -174,7 +184,7 @@ class Triangular:
     def __init__(self, a1, n):
         self.a = a1
         self.n = n
-        self.seq = list(self._sequence())
+        self.seq = self._sequence()
         self.an = self.seq[-1]
 
     def __repr__(self):
@@ -184,8 +194,10 @@ class Triangular:
         return iter(self.seq)
 
     def _sequence(self):
+        seq = []
         for n in range(1, self.n + 1):
-            yield sigma(n)
+            seq.append(sigma(n))
+        return seq
 
     def nthterm(self, n):
         if n > self.n:
