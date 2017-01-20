@@ -95,7 +95,7 @@ class Fraction:
     __rfloordiv__ = __rtruediv__
 
     def __pow__(self, power, modulo=None):
-        return Fraction(self.numer ** power / self.denom ** power)
+        return Fraction(self.numer ** float(power) / self.denom ** float(power))
 
     def __gt__(self, other):
         other = self.convert_to_fraction(other)
@@ -161,15 +161,15 @@ def convert_any_decimal(decimal):
 
 def main():
     f1 = Fraction(0.5)
-    f2 = Fraction(9/4)
+    f2 = Fraction(2/3)
     f3 = Fraction(4, 9)
-    f4 = Fraction(1/9)
+    f4 = Fraction(1, 27)
     f1_sqrd = f1 ** 2
-    f2_sqrd = f2 ** 2
-    f3_sqrt = f3 ** (1/2)
-    f4_sqrt = f4 ** (1/2)
+    f2_cubed = f2 ** 3
+    f3_sqrt = f3 ** f1
+    f4_cbrt = f4 ** f3_sqrt
     print(f1, f2, f3, f4)
-    print(f1_sqrd, f2_sqrd, f3_sqrt, f4_sqrt)
+    print(f1_sqrd, f2_cubed, f3_sqrt, f4_cbrt)
 
 
 if __name__ == "__main__":
