@@ -13,16 +13,23 @@ class Sequence:
         self.d = d
         self.n = n
         self.seq = [None]
-        self.an = self.seq[-1]
 
     def __repr__(self):
-        return self.wrap(self.seq)
+        return ', '.join(str(n) for n in self.seq)
 
     def __len__(self):
         return len(self.seq)
 
     def __iter__(self):
         return iter(self.seq)
+
+    def find(self, num):
+        return self.seq.index(num)
+
+    def nthterm(self, n):
+        if n > self.n:
+            raise ValueError("nth out of range")
+        return self.seq[n - 1]
 
     @staticmethod
     def wrap(seqlist, wraptype=str):
@@ -50,28 +57,18 @@ class Arithmetic(Sequence):
     def __init__(self, a1, d, n):
         super().__init__(a1, d, n)
         self.seq = self._sequence()
+        self.an = self.seq[-1]
 
     def _sequence(self):
         seq = []
         a = self.a - self.d
         for _ in range(self.n):
             a += self.d
-            seq.append(a)
+            seq.append(Fraction(a))
         return seq
 
-    def find(self, num):
-        return self.seq.index(num)
-
-    def nthterm(self, n):
-        if n > self.n:
-            raise ValueError("nth out of range")
-        return self.seq[n - 1]
-
     def series(self):
-        return floatint(self.n * (self.a + self.an) / 2)
-
-    def diff(self):
-        return self.d
+        return Fraction(self.n * float(self.a + self.an) / 2)
 
 
 class Harmonic(Sequence):
@@ -94,6 +91,7 @@ class Harmonic(Sequence):
     def __init__(self, a1, d, n):
         super().__init__(a1, d, n)
         self.seq = self._sequence()
+        self.an = self.seq[-1]
 
     def _sequence(self):
         seq = []
@@ -101,16 +99,11 @@ class Harmonic(Sequence):
             seq.append(Fraction(1 / (self.d * n)))
         return seq
 
-    def nthterm(self, n):
-        if n > self.n:
-            raise ValueError("nth out of range")
-        return self.seq[n - 1]
-
     def series(self):
         return Fraction(zsum(eachtofloat(self.seq)))
 
 
-class Geometric:
+class Geometric(Sequence):
     """
     Description:
         An advanced geometric sequence toolkit.
@@ -128,40 +121,20 @@ class Geometric:
     """
 
     def __init__(self, a1, r, n):
-        self.a = a1
-        self.r = r
-        self.n = n
+        super().__init__(a1, r, n)
         self.seq = list(self._sequence())
         self.an = self.seq[-1]
 
-    def __repr__(self):
-        return str(self.seq)
-
-    def __len__(self):
-        return self.n
-
-    def __iter__(self):
-        return iter(self.seq)
-
     def _sequence(self):
-        a = self.a / self.r
+        seq = []
+        a = self.a / self.d
         for _ in range(self.n):
-            a *= self.r
-            yield floatint(a)
-
-    def find(self, num):
-        return self.seq.index(num)
-
-    def nthterm(self, n):
-        if n > self.n:
-            raise ValueError("nth out of range")
-        return self.seq[n - 1]
+            a *= self.d
+            seq.append(Fraction(a))
+        return seq
 
     def series(self):
-        return floatint((self.a * (1 - self.r ** self.n)) / (1 - self.r))
-
-    def ratio(self):
-        return self.r
+        return Fraction((self.a * (1 - self.d ** self.n)) / (1 - self.d))
 
 
 class Triangular:
@@ -186,7 +159,7 @@ class Triangular:
         self.an = self.seq[-1]
 
     def __repr__(self):
-        return str(self.seq)
+        return ', '.join(str(n) for n in self.seq)
 
     def __iter__(self):
         return iter(self.seq)
@@ -209,7 +182,7 @@ class Triangular:
 class Power:
     """
     Description:
-        An advanced square sequence toolkit.
+        An advanced power sequence toolkit.
     Attributes:
         p - the power exponent of sequence
         n - number of terms in sequence
@@ -221,14 +194,15 @@ class Power:
         series - returns the sum of the sequence
     """
 
-    def __init__(self, p, n):
+    def __init__(self, a1, p, n):
+        self.a = a1
         self.p = p
         self.n = n
-        self.seq = list(self._sequence())
+        self.seq = self._sequence()
         self.an = self.seq[-1]
 
     def __repr__(self):
-        return str(self.seq)
+        return ', '.join(str(n) for n in self.seq)
 
     def __len__(self):
         return self.n
@@ -237,8 +211,10 @@ class Power:
         return iter(self.seq)
 
     def _sequence(self):
-        for i in range(1, self.n + 1):
-            yield pow(i, self.p)
+        seq = []
+        for i in range(self.a, self.a + self.n):
+            seq.append(Fraction(pow(i, self.p)))
+        return seq
 
     def find(self, num):
         return self.seq.index(num)
@@ -249,7 +225,7 @@ class Power:
         return self.seq[n - 1]
 
     def series(self):
-        return zsum(self.seq)
+        return Fraction(zsum(self.seq))
 
 
 class Fibonacci:
@@ -272,7 +248,7 @@ class Fibonacci:
         self.an = self.seq[-1]
 
     def __repr__(self):
-        return str(self.seq)
+        return ', '.join(str(n) for n in self.seq)
 
     def __iter__(self):
         return iter(self.seq)
@@ -357,26 +333,18 @@ def allsame(iterable):
 
 
 def main():
-    alist = [9, 9, 9, 9, 8]
-    print(allsame(alist))
-    # sequence(alist)
-    #
-    # h1 = Harmonic(2, 5, 7)
-    # print(h1)
-    # print(h1.series())
-
-    # g1 = Geometric(2, 2, 10)
-    # print(g1)
-    # print(g1.find(64), g1.series())
-
-    # print(diff(list(a1)), diff(list(a2)))
-    # print(ratio(list(g1)), ratio(list(g2)))
-
-    # t1 = Triangular(1, 10)
-    # s1 = Power(3, 10)
-    # f1 = Fibonacci(15)
-    # print(s1)
-    # print(f1.series())
+    a1 = Arithmetic(1, 1/2, 7)
+    h1 = Harmonic(2, 1, 7)
+    g1 = Geometric(2, 1/2, 7)
+    t1 = Triangular(1, 7)
+    p1 = Power(1, 2, 7)
+    f1 = Fibonacci(7)
+    print(a1, a1.series(), sep='--> ')
+    print(h1, h1.series(), sep='--> ')
+    print(g1, g1.series(), sep='--> ')
+    print(t1, t1.series(), sep='--> ')
+    print(p1, p1.series(), sep='--> ')
+    print(f1, f1.series(), sep='--> ')
 
 
 if __name__ == '__main__':
