@@ -60,7 +60,12 @@ def is_op(c):
 
 
 def isnum(c):
+    c = str(c)
     if c != '':
+        if c == '-':
+            return False
+        if c.startswith('-'):
+            c = c[1:]
         for i in list(str(c)):
             if i not in "0123456789.":
                 return False
@@ -106,8 +111,8 @@ def zsum(numbers, start=0, end=None, exp=1):
         end = len(numbers)
     res = 0
     for n in numbers[start:end]:
-        res += n ** exp
-    return res
+        res += float(n) ** exp
+    return floatint(res)
 
 
 def zsum2(*args):
