@@ -137,6 +137,36 @@ class Geometric(Sequence):
         return Fraction((self.a * (1 - self.d ** self.n)) / (1 - self.d))
 
 
+class Power(Sequence):
+    """
+    Description:
+        An advanced power sequence toolkit.
+    Attributes:
+        p - the power exponent of sequence
+        n - number of terms in sequence
+        seq - list of square sequence
+        an - last term of sequence
+    Methods:
+        _sequence - a private generator function to construct the sequence
+        nthterm - returns the nth term of the sequence
+        series - returns the sum of the sequence
+    """
+
+    def __init__(self, a1, p, n):
+        super().__init__(a1, p, n)
+        self.seq = self._sequence()
+        self.an = self.seq[-1]
+
+    def _sequence(self):
+        seq = []
+        for i in range(self.a, self.a + self.n):
+            seq.append(Fraction(pow(i, self.d)))
+        return seq
+
+    def series(self):
+        return Fraction(zsum(self.seq))
+
+
 class Triangular:
     """
     Description:
@@ -177,55 +207,6 @@ class Triangular:
 
     def series(self):
         return floatint((self.n * (self.n + 1) * (self.n + 2)) / 6)
-
-
-class Power:
-    """
-    Description:
-        An advanced power sequence toolkit.
-    Attributes:
-        p - the power exponent of sequence
-        n - number of terms in sequence
-        seq - list of square sequence
-        an - last term of sequence
-    Methods:
-        _sequence - a private generator function to construct the sequence
-        nthterm - returns the nth term of the sequence
-        series - returns the sum of the sequence
-    """
-
-    def __init__(self, a1, p, n):
-        self.a = a1
-        self.p = p
-        self.n = n
-        self.seq = self._sequence()
-        self.an = self.seq[-1]
-
-    def __repr__(self):
-        return ', '.join(str(n) for n in self.seq)
-
-    def __len__(self):
-        return self.n
-
-    def __iter__(self):
-        return iter(self.seq)
-
-    def _sequence(self):
-        seq = []
-        for i in range(self.a, self.a + self.n):
-            seq.append(Fraction(pow(i, self.p)))
-        return seq
-
-    def find(self, num):
-        return self.seq.index(num)
-
-    def nthterm(self, n):
-        if n > self.n:
-            raise ValueError("nth out of range")
-        return self.seq[n - 1]
-
-    def series(self):
-        return Fraction(zsum(self.seq))
 
 
 class Fibonacci:
