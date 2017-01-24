@@ -1,5 +1,6 @@
 import random
 import time
+from collections import defaultdict
 
 
 class Coin:
@@ -41,7 +42,33 @@ class Coin:
         print("Tails: {}, {}%".format(self.tails, tails))
 
 
-if __name__ == '__main__':
-    coin = Coin()
+class Dice:
+    """An abstraction of a regular 6-sided dice."""
+    def simulate(self, trials):
+        """
+        Roll dice for the number of trials and return the counts.
+        :param trials: number of times to roll dice
+        :return: dict
+        """
+        sides = defaultdict(int)
+        for i in range(trials):
+            side = self.roll()
+            sides[side] += 1
+        return dict(sides)
+
+    @staticmethod
+    def roll():
+        return random.randint(1, 6)
+
+
+def main():
+    # coin = Coin()
     # print(coin.flip())
     # coin.simulate(1000, True)
+
+    dice = Dice()
+    print(dice.simulate(100))
+
+
+if __name__ == '__main__':
+    main()
