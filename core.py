@@ -29,6 +29,8 @@ def mod(a, b): return a % b
 
 
 def power(x, n):
+    reciprocal = True if n < 0 else False
+    n = abs(n)
     if n == 0:
         return 1
     else:
@@ -36,7 +38,7 @@ def power(x, n):
         result = partial * partial
         if n % 2 == 1:
             result *= x
-        return result
+        return 1 / result if reciprocal else result
 
 
 def precedence(c):
@@ -150,10 +152,10 @@ def floatint(num, rnd=None):
         return round(num, ndigits=rnd)
 
 
-def eachtofrac(collection):
+def eachtofrac(iterable):
     """Takes an iterable as an argument and returns a
     list of each item converted to a fraction"""
-    return [Fraction(c) for c in collection]
+    return list(map(Fraction, iterable))
 
 
 def floatfrac(num):
@@ -514,10 +516,12 @@ def main():
     # print(alcm)
     # print(a, list(map(lambda x: alcm // x, a)))
 
-    x = 1000
-    f = measure(fib)
-    f(x)
+    # x = 1000
+    # f = measure(fib)
+    # f(x)
 
+    print(pow(4, .5))
+    print(power(4, .5))
     # mytriples = sorted(triples(50), key=lambda *triple: sum(*triple))
     # for t in mytriples:
     #     print(t)

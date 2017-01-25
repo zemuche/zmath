@@ -31,6 +31,9 @@ class Sequence:
             raise ValueError("nth out of range")
         return self.seq[n - 1]
 
+    def _sequence(self):
+        raise NotImplementedError
+
     @staticmethod
     def wrap(seqlist, wraptype=str):
         wrap_at = 4 if len(seqlist) > 4 else len(seqlist) + 1
