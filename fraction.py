@@ -1,4 +1,10 @@
 import math
+superscripts = {"0": chr(186), "1": chr(185), "2": chr(178), "3": chr(179),
+                "4": chr(8308), "5": chr(8309), "6": chr(8310),
+                "7": chr(8311), "8": chr(8312), "9": chr(8313)}
+subscripts = {"0": chr(8320), "1": chr(8321), "2": chr(8322), "3": chr(8323),
+              "4": chr(8324), "5": chr(8325), "6": chr(8326), "7": chr(8327),
+              "8": chr(8328), "9": chr(8329)}
 
 
 class Fraction:
@@ -6,6 +12,9 @@ class Fraction:
         self.mixed = mixed
         if isinstance(numer, float):
             numer, denom = self.__converter(numer)
+        if numer < 0 and denom < 0:
+            numer *= -1
+            denom *= -1
         g = math.gcd(numer, denom)
         self._numer = numer // g
         self._denom = denom // g
@@ -29,10 +38,11 @@ class Fraction:
         self._denom = new_denom
 
     def __str__(self):
-        regular = str(self.numer) + '/' + str(self.denom)
+        regular = superscript(self.numer) + chr(8260) + \
+                  subscript(self.denom)
         if self.numer == self.denom or self.denom == 1:
             return str(self.numer)
-        if self.mixed:
+        elif self.mixed:
             if abs(self.numer) > abs(self.denom):
                 whole = self.numer // self.denom
                 self.numer %= self.denom
@@ -41,9 +51,10 @@ class Fraction:
                 if self.numer == 0:
                     return str(whole)
                 else:
-                    return str(whole) + ' ' + str(abs(self.numer)) + \
-                           '/' + str(self.denom)
-        return regular
+                    return str(whole) + superscript(abs(self.numer)) + \
+                           '/' + subscript(self.denom)
+        else:
+            return regular
 
     def __int__(self):
         return self.numer // self.denom
@@ -53,6 +64,9 @@ class Fraction:
 
     def __round__(self, n=None):
         return round(float(self), n)
+
+    def __abs__(self):
+        return Fraction(abs(self.numer), abs(self.denom))
 
     def __add__(self, other):
         other = self.convert_to_fraction(other)
@@ -122,6 +136,28 @@ class Fraction:
     def __converter(decimal):
         return decimal_ratios(decimal)
 
+    def superscript(self):
+        return superscript(self.numer)
+
+    def subscript(self):
+        return subscript(self.denom)
+
+
+def superscript(num):
+    return ''.join(superscripts[n] for n in str(num))
+
+
+def subscript(num):
+    return ''.join(subscripts[n] for n in str(num))
+
+
+def floatfrac(num):
+    """Return the fraction of a floating point number."""
+    if isinstance(num, float) or isinstance(num, int):
+        return Fraction(num)
+    else:
+        return num
+
 
 def decimal_ratios(x, repeat=None):
     from zmath.core import floatint
@@ -162,7 +198,7 @@ def convert_any_decimal(decimal):
 def main():
     f1 = Fraction(0.5)
     f2 = Fraction(2/3)
-    f3 = Fraction(4, 9)
+    f3 = Fraction(-4, -9)
     f4 = Fraction(1, 27)
     f1_sqrd = f1 ** 2
     f2_cubed = f2 ** 3
@@ -170,6 +206,10 @@ def main():
     f4_cbrt = f4 ** f3_sqrt
     print(f1, f2, f3, f4)
     print(f1_sqrd, f2_cubed, f3_sqrt, f4_cbrt)
+
+    f1 *= 5
+    f1.mixed = True
+    print(f1)
 
 
 if __name__ == "__main__":
